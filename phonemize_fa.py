@@ -5,7 +5,8 @@ Includes text normalization using pernorm before phonemization.
 """
 
 from vaguye import PersianPhonemizer
-from pernorm.normalizer import PersianNormalizer
+# from pernorm.normalizer import PersianNormalizer
+from local_normalizer import PersianNormalizer
 
 
 # Global variables for lazy loading
@@ -56,7 +57,16 @@ def phonemize(text, tokenizer):
     input_ids = []
     phonemes_list = []
     
-    for raw_word in raw_words:
+    # Define number words to identify context for 'و' -> 'o'
+    ones = ["صفر", "یک", "دو", "سه", "چهار", "پنج", "شش", "هفت", "هشت", "نه"]
+    teens = ["ده", "یازده", "دوازده", "سیزده", "چهارده", "پانزده", "شانزده", "هفده", "هجده", "نوزده"]
+    tens = ["بیست", "سی", "چهل", "پنجاه", "شصت", "هفتاد", "هشتاد", "نود"]
+    hundreds = ["صد", "یکصد", "دویست", "سیصد", "چهارصد", "پانصد", "ششصد", "هفتصد", "هشتصد", "نهصد"]
+    scales = ["هزار", "میلیون", "میلیارد", "بیلیون", "تریلیون", "کوادریلیون"]
+    # We do NOT include 'و' or other connectives here, just the numbers themselves.
+    number_words = set(ones + teens + tens + hundreds + scales)
+
+    for idx, raw_word in enumerate(raw_words):
         # Tokenize this specific word
         word_tokens = tokenizer.tokenize(raw_word)
         
@@ -66,7 +76,18 @@ def phonemize(text, tokenizer):
         # Phonemize the RAW word (preserves ZWNJ like in 'کتابخانه‌داری')
         try:
             phonemizer = get_phonemizer()
-            full_phoneme = phonemizer.phonemize(raw_word)
+            
+            # Check for 'و' between numbers
+            if raw_word == "و" and idx > 0 and idx < len(raw_words) - 1:
+                 prev_word = raw_words[idx-1]
+                 next_word = raw_words[idx+1]
+                 if prev_word in number_words and next_word in number_words:
+                     full_phoneme = "o"
+                 else:
+                     full_phoneme = phonemizer.phonemize(raw_word)
+            else:
+                full_phoneme = phonemizer.phonemize(raw_word)
+                
             if not full_phoneme or full_phoneme.strip() == '':
                 full_phoneme = raw_word
         except Exception as e:
