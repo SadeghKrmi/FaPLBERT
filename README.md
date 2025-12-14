@@ -1,3 +1,26 @@
+# Persian Phoneme-Level BERT (training)
+GPU RTX A6000 (1x) is used for training, dataset of 1.3 milion sentences, chunked, normalized from wikipedia dataset for Farsi. 
+```bash
+ds = load_dataset("wikimedia/wikipedia", "20231101.fa", split="train", streaming=True)
+```
+
+Training run for 305K steps with the following result (around the following values)
+```bash
+Step [305000/2000000], Loss: 1.38343, Vocab Loss: 0.34593, Token Loss: 1.25434
+```
+
+dataset and model is stored in HF: `SadeghK/Persian-PL-BERT`
+
+
+For dataset preparation from wikipedia, refer to `wikipedia-dataset-styletts2-preparation`
+```bash
+wikipedia entry -> [normalize] -> [chunk] -> [hamnevise] -> [Zirneshane]
+```
+
+For further details of preprocessing, training refer to `preprocess_fa.ipynb` and `train_fa.ipynb`
+
+---
+
 # Phoneme-Level BERT for Enhanced Prosody of Text-to-Speech with Grapheme Predictions
 
 ### Yinghao Aaron Li, Cong Han, Xilin Jiang, Nima Mesgarani
