@@ -9,7 +9,7 @@ Training run for 305K steps with the following result (around the following valu
 Step [305000/2000000], Loss: 1.38343, Vocab Loss: 0.34593, Token Loss: 1.25434
 ```
 
-dataset and model is stored in HF: `SadeghK/Persian-PL-BERT`
+dataset and model is stored in HF: `SadeghK/Fa-PLBERT`
 
 
 For dataset preparation from wikipedia, refer to `wikipedia-dataset-styletts2-preparation`
