@@ -1,4 +1,6 @@
 # Persian Phoneme-Level BERT (training)
+> This model is based on [Vaguye](https://github.com/SadeghKrmi/vaguye) phonemizer for Persian!
+
 GPU RTX A6000 (1x) is used for training, dataset of 1.3 milion sentences, chunked, normalized from wikipedia dataset for Farsi. 
 ```bash
 ds = load_dataset("wikimedia/wikipedia", "20231101.fa", split="train", streaming=True)
